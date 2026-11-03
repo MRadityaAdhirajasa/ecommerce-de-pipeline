@@ -2,4 +2,4 @@
 .venv/
 data/
 __pycache__/
-plan/
+plan/.claude/
