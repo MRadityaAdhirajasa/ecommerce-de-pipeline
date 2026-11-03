@@ -1,0 +1,49 @@
+{
+  "name": "ecommerce_bronze_silver",
+  "email_notifications": {
+    "no_alert_for_skipped_runs": false
+  },
+  "webhook_notifications": {},
+  "timeout_seconds": 0,
+  "max_concurrent_runs": 1,
+  "tasks": [
+    {
+      "task_key": "raw_to_bronze",
+      "run_if": "ALL_SUCCESS",
+      "notebook_task": {
+        "notebook_path": "/Workspace/Users/bejolearnings@gmail.com/ecommerce-de-pipeline/01_raw_to_bronze",
+        "source": "WORKSPACE"
+      },
+      "timeout_seconds": 0,
+      "email_notifications": {},
+      "webhook_notifications": {},
+      "disabled": false
+    },
+    {
+      "task_key": "bronze_to_silver",
+      "depends_on": [
+        {
+          "task_key": "raw_to_bronze"
+        }
+      ],
+      "run_if": "ALL_SUCCESS",
+      "notebook_task": {
+        "notebook_path": "/Workspace/Users/bejolearnings@gmail.com/ecommerce-de-pipeline/02_bronze_to_silver",
+        "source": "WORKSPACE"
+      },
+      "timeout_seconds": 0,
+      "email_notifications": {},
+      "disabled": false
+    }
+  ],
+  "queue": {
+    "enabled": true
+  },
+  "parameters": [
+    {
+      "name": "run_date",
+      "default": "2019-10-01"
+    }
+  ],
+  "performance_target": "PERFORMANCE_OPTIMIZED"
+}

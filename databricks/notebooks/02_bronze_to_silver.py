@@ -1,4 +1,8 @@
 # Databricks notebook source
+# /// script
+# [tool.databricks.environment]
+# environment_version = "6"
+# ///
 dbutils.widgets.text("run_date", "2019-10-01")
 run_date = dbutils.widgets.get("run_date")
 print("run_date =", run_date)
@@ -26,10 +30,10 @@ typed = (
     .withColumn("is_price_zero", F.coalesce(F.col("price"), F.lit(0)) <= 0)
 )
 
+# dipake dua kali (hitung DQ + tulis), dedup itu shuffle mahal
 silver = typed.dropDuplicates(
     ["event_time", "event_type", "product_id", "user_id", "user_session"]
-)
-silver.cache()  # dipake dua kali (hitung DQ + tulis), dedup itu shuffle mahal
+).cache()
 
 # COMMAND ----------
 
