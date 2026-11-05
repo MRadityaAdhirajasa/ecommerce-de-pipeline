@@ -1,0 +1,13 @@
+ecommerce:
+  target: dev
+  outputs:
+    dev:
+      type: databricks
+      # dbt minta host TANPA https://, sementara .env nyimpen pakai skema
+      # karena databricks-sdk justru butuh yang lengkap. Dipotong di sini.
+      host: "{{ env_var('DATABRICKS_HOST') | replace('https://', '') }}"
+      http_path: "{{ env_var('DATABRICKS_HTTP_PATH') }}"
+      token: "{{ env_var('DATABRICKS_TOKEN') }}"
+      catalog: "{{ env_var('DATABRICKS_CATALOG', 'ecommerce') }}"
+      schema: gold
+      threads: 4

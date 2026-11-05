@@ -1,0 +1,16 @@
+name: 'ecommerce'
+version: '1.0.0'
+config-version: 2
+profile: 'ecommerce'
+
+# Dipakai semua model fakta buat filter satu tanggal per run.
+# Airflow override ini lewat: dbt build --vars '{run_date: 2019-10-05}'
+vars:
+  run_date: '2019-10-01'
+
+models:
+  ecommerce:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table
