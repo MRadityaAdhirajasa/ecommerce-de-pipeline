@@ -2,7 +2,10 @@
 
 Satu run memproses satu tanggal. Dataset Kaggle ini data historis Oktober 2019,
 jadi kedatangan data harian disimulasikan lewat backfill: start_date 2019-10-01,
-end_date 2019-10-31, jadwal harian.
+end_date 2019-10-07, jadwal harian. Tujuh hari dipilih karena 2019-10-01 jatuh
+hari Selasa, jadi rentang ini mencakup tiap hari-dalam-seminggu tepat sekali --
+penting untuk heatmap fct_hourly_activity. Naikkan end_date untuk menambah hari;
+pipeline-nya idempotent jadi tanggal lama tidak terpengaruh.
 
 Urutan: cek file lokal -> upload ke Volume -> Spark job (bronze+silver) ->
 dbt build (gold + tests) -> catat ringkasan ke ops.pipeline_runs.
@@ -135,7 +138,7 @@ def log_run_summary(run_date: str) -> dict:
     dag_id="ecommerce_daily",
     description="Batch harian e-commerce: landing -> bronze -> silver -> gold",
     start_date=pendulum.datetime(2019, 10, 1, tz="UTC"),
-    end_date=pendulum.datetime(2019, 10, 31, tz="UTC"),
+    end_date=pendulum.datetime(2019, 10, 7, tz="UTC"),
     schedule="@daily",
     catchup=True,
     # Free Edition cuma punya satu SQL warehouse kecil. Lebih dari satu run

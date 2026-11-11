@@ -36,3 +36,26 @@ models:
         tests: [not_null, unique]
       - name: sessions
         tests: [not_null]
+  - name: fct_hourly_activity
+    columns:
+      - name: event_date
+        tests: [not_null]
+      - name: event_hour
+        tests: [not_null]
+      - name: events
+        tests: [not_null]
+
+  - name: mart_top_products
+    columns:
+      - name: week_start
+        tests: [not_null]
+      - name: product_id
+        tests:
+          # Test relationships dari tabel FAKTA ke dim_products, sesuai yang
+          # diminta plan. Hari 3 belum bisa dipasang karena fct_daily_* tidak
+          # punya kolom product_id.
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_products')
+                field: product_id
