@@ -10,3 +10,6 @@ dbt/.user.yml
 airflow/logs/
 airflow/config/
 airflow/plugins/
+# Power BI: cache data hasil import + binding kredensial lokal per mesin
+powerbi/**/.pbi/cache.abf
+powerbi/**/.pbi/localSettings.json

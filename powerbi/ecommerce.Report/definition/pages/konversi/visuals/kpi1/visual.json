@@ -1,0 +1,39 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "kpi1",
+  "position": {
+    "x": 658,
+    "y": 128,
+    "z": 3000,
+    "height": 140,
+    "width": 602,
+    "tabOrder": 3000
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_daily_funnel"
+                    }
+                  },
+                  "Property": "Purchase Sessions"
+                }
+              },
+              "queryRef": "fct_daily_funnel.Purchase Sessions",
+              "nativeQueryRef": "Purchase Sessions",
+              "displayName": "Sesi membeli"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "kpi4",
+  "position": {
+    "x": 1536,
+    "y": 128,
+    "z": 6000,
+    "height": 140,
+    "width": 352,
+    "tabOrder": 6000
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_daily_sales"
+                    }
+                  },
+                  "Property": "Avg Daily Buyers"
+                }
+              },
+              "queryRef": "fct_daily_sales.Avg Daily Buyers",
+              "nativeQueryRef": "Avg Daily Buyers",
+              "displayName": "Rata-rata pembeli per hari"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

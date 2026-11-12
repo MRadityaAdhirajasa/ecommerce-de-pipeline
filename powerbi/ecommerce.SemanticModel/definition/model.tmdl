@@ -1,0 +1,24 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-ID
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_QueryOrder = ["dim_products","fct_daily_funnel","fct_daily_sales","fct_hourly_activity","mart_top_products"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table dim_products
+ref table fct_daily_funnel
+ref table fct_daily_sales
+ref table fct_hourly_activity
+ref table mart_top_products
+ref table Date
+
+ref cultureInfo en-US
+

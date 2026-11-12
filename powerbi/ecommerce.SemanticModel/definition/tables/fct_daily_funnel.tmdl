@@ -1,0 +1,100 @@
+table fct_daily_funnel
+	lineageTag: 6f6687cb-45a6-4868-b51e-ce796f9c6f92
+
+	measure 'View Sessions' = SUM(fct_daily_funnel[sessions_view])
+		formatString: #,0
+		lineageTag: 2235b935-9c59-430a-8271-864fd153d539
+
+	measure 'Purchase Sessions' = SUM(fct_daily_funnel[sessions_purchase])
+		formatString: #,0
+		lineageTag: db52cbc6-95ab-45c8-a9fc-1b7aad994a98
+
+	/// Sesi purchase / sesi view, dihitung ulang dari jumlahnya. Rata-rata kolom conversion_rate harian akan salah bobot.
+	measure 'Conversion Rate' = DIVIDE([Purchase Sessions], [View Sessions])
+		formatString: 0.00%
+		lineageTag: 3b3c6658-40d9-4f3a-b876-25b956aa9662
+
+	/// Porsi sesi beli tanpa event cart. Dataset tidak mencatat semua event cart, karena itu tahap Cart tidak dipakai di dashboard.
+	measure 'Purchase Without Cart' = DIVIDE(SUM(fct_daily_funnel[sessions_purchase_no_cart]), [Purchase Sessions])
+		formatString: 0.0%
+		lineageTag: a1740d90-f3a1-440e-bd6b-7989c8f1d472
+
+	column event_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 24f448c6-b24b-480d-84b7-84fe4a4ad8fe
+		summarizeBy: none
+		sourceColumn: event_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column sessions
+		dataType: int64
+		formatString: 0
+		lineageTag: 7755eacb-478b-4e69-9b1b-ff4d2e219bfd
+		summarizeBy: sum
+		sourceColumn: sessions
+
+		annotation SummarizationSetBy = Automatic
+
+	column sessions_view
+		dataType: int64
+		formatString: 0
+		lineageTag: c882678d-5e29-4741-ae62-c4fd45782a71
+		summarizeBy: sum
+		sourceColumn: sessions_view
+
+		annotation SummarizationSetBy = Automatic
+
+	column sessions_cart
+		dataType: int64
+		formatString: 0
+		lineageTag: e53c67d1-5f39-4074-b23f-50910e826116
+		summarizeBy: sum
+		sourceColumn: sessions_cart
+
+		annotation SummarizationSetBy = Automatic
+
+	column sessions_purchase
+		dataType: int64
+		formatString: 0
+		lineageTag: 77192a38-61ce-4419-9000-25f44a6a7543
+		summarizeBy: sum
+		sourceColumn: sessions_purchase
+
+		annotation SummarizationSetBy = Automatic
+
+	column sessions_purchase_no_cart
+		dataType: int64
+		formatString: 0
+		lineageTag: d2525afd-7ba0-4e37-92f5-f253e6268b39
+		summarizeBy: sum
+		sourceColumn: sessions_purchase_no_cart
+
+		annotation SummarizationSetBy = Automatic
+
+	column conversion_rate
+		dataType: double
+		lineageTag: e01563c2-24f4-4b2c-8a01-959e31369c50
+		summarizeBy: none
+		sourceColumn: conversion_rate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition fct_daily_funnel = m
+		mode: import
+		source =
+				let
+				  Source = DatabricksMultiCloud.Catalogs("dbc-0f42ee9a-bdee.cloud.databricks.com", "/sql/1.0/warehouses/292b3395dca4d5ea", [Catalog = null, Database = null, QueryTags = null, EnableAutomaticProxyDiscovery = "enabled", Implementation = "2.0", Protocol = null]),
+				  #"Navigation 1" = Source{[Name = "ecommerce", Kind = "Database"]}[Data],
+				  #"Navigation 2" = #"Navigation 1"{[Name = "gold", Kind = "Schema"]}[Data],
+				  #"Navigation 3" = #"Navigation 2"{[Name = "fct_daily_funnel", Kind = "Table"]}[Data]
+				in
+				  #"Navigation 3"
+
+	annotation PBI_ResultType = Table
+

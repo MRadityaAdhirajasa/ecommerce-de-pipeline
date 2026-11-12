@@ -1,0 +1,121 @@
+table fct_hourly_activity
+	lineageTag: fa55975a-eb4d-45f2-801d-49de79246801
+
+	measure 'Total Events' = SUM(fct_hourly_activity[events])
+		formatString: #,0
+		lineageTag: 9f915d69-ad60-462b-a647-9c3b18b227f8
+
+	measure 'Hourly Purchases' = SUM(fct_hourly_activity[purchases])
+		formatString: #,0
+		lineageTag: 74daf145-3ec1-490d-9998-42e9200506c2
+
+	measure 'Days in Range' = DISTINCTCOUNT(fct_hourly_activity[event_date])
+		formatString: 0
+		lineageTag: 44ea6664-d640-4ab0-8c2b-4c7558982c83
+
+	/// Rata-rata per tanggal, bukan jumlah. Rentang 1-11 Okt memuat Selasa-Jumat dua kali, jadi jumlah akan menggandakan hari-hari itu.
+	measure 'Avg Events per Day' = DIVIDE([Total Events], [Days in Range])
+		formatString: #,0
+		lineageTag: 8f2a2893-8c90-406f-9595-c04086ffbed2
+
+	measure 'Avg Purchases per Day' = DIVIDE([Hourly Purchases], [Days in Range])
+		formatString: #,0
+		lineageTag: 703faac9-3ea3-4259-b190-e99b285c0db9
+
+	/// Event purchase dibagi sesi aktif di jam itu. Proksi konversi per jam: satu sesi bisa membeli lebih dari satu item.
+	measure 'Purchases per Session' = DIVIDE([Hourly Purchases], SUM(fct_hourly_activity[sessions]))
+		formatString: 0.0%
+		lineageTag: 6d94ab45-dc01-443f-abb5-63b99c1cdd6e
+
+	column event_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 1a9b40b9-3023-41ed-b5d2-c5efa52437be
+		summarizeBy: none
+		sourceColumn: event_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column event_hour
+		dataType: int64
+		formatString: 0
+		lineageTag: 697ab4e6-6812-48b4-afe1-444bb7b907bc
+		summarizeBy: none
+		sourceColumn: event_hour
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_of_week
+		dataType: int64
+		formatString: 0
+		lineageTag: 8ed0748c-48c3-4a97-b121-5eeb69b9a7b0
+		summarizeBy: none
+		sourceColumn: day_of_week
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_name
+		dataType: string
+		lineageTag: 18f90b64-7c8c-463d-8e05-fd65e06fe6f4
+		summarizeBy: none
+		sourceColumn: day_name
+		sortByColumn: day_of_week
+
+		annotation SummarizationSetBy = Automatic
+
+	column events
+		dataType: int64
+		formatString: 0
+		lineageTag: 732ccc61-bede-4e80-b6f3-5acb4e3be4f4
+		summarizeBy: sum
+		sourceColumn: events
+
+		annotation SummarizationSetBy = Automatic
+
+	column sessions
+		dataType: int64
+		formatString: 0
+		lineageTag: a1d153ba-7b15-457a-82e9-54bf2ce25bd1
+		summarizeBy: sum
+		sourceColumn: sessions
+
+		annotation SummarizationSetBy = Automatic
+
+	column purchases
+		dataType: int64
+		formatString: 0
+		lineageTag: 79242387-1841-4b9c-a5ef-e73f772bff1f
+		summarizeBy: sum
+		sourceColumn: purchases
+
+		annotation SummarizationSetBy = Automatic
+
+	column Hari = SWITCH(fct_hourly_activity[day_of_week], 1, "Minggu", 2, "Senin", 3, "Selasa", 4, "Rabu", 5, "Kamis", 6, "Jumat", 7, "Sabtu")
+		dataType: string
+		lineageTag: f31d7d3a-046b-4c2b-8a8f-32a27cfee9db
+		summarizeBy: none
+		sortByColumn: 'Urutan Hari'
+
+	/// Senin = 0 ... Minggu = 6. Databricks dayofweek memakai Minggu = 1.
+	column 'Urutan Hari' = MOD(fct_hourly_activity[day_of_week] + 5, 7)
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 3124b1ca-2ec9-416d-a050-1d63525b7c38
+		summarizeBy: none
+
+	partition fct_hourly_activity = m
+		mode: import
+		source =
+				let
+				  Source = DatabricksMultiCloud.Catalogs("dbc-0f42ee9a-bdee.cloud.databricks.com", "/sql/1.0/warehouses/292b3395dca4d5ea", [Catalog = null, Database = null, QueryTags = null, EnableAutomaticProxyDiscovery = "enabled", Implementation = "2.0", Protocol = null]),
+				  #"Navigation 1" = Source{[Name = "ecommerce", Kind = "Database"]}[Data],
+				  #"Navigation 2" = #"Navigation 1"{[Name = "gold", Kind = "Schema"]}[Data],
+				  #"Navigation 3" = #"Navigation 2"{[Name = "fct_hourly_activity", Kind = "Table"]}[Data]
+				in
+				  #"Navigation 3"
+
+	annotation PBI_ResultType = Table
+

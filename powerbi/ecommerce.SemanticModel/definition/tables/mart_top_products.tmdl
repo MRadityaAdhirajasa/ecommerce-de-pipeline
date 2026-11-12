@@ -1,0 +1,88 @@
+table mart_top_products
+	lineageTag: 5c313141-49ce-4399-9e7e-265731fd8c67
+
+	measure 'Product Revenue' = SUM(mart_top_products[revenue])
+		formatString: \$#,0
+		lineageTag: 7ea8c9b4-5d8f-44bc-b145-57804da1774b
+
+	measure 'Product Orders' = SUM(mart_top_products[orders])
+		formatString: #,0
+		lineageTag: 218c4b13-4ae2-4149-83b8-c5aecec761a5
+
+	/// Porsi revenue terhadap semua produk di kategori dan minggu yang dipilih. Filter brand/produk/TopN dilepas supaya penyebutnya bukan cuma top 10.
+	measure 'Revenue Share' = DIVIDE([Product Revenue], CALCULATE([Product Revenue], ALLEXCEPT(dim_products, dim_products[category_l1])))
+		formatString: 0.0%
+		lineageTag: 1bb9da01-5fcb-4b04-b85f-0c7626c87c4d
+
+	measure 'Avg Item Price' = DIVIDE([Product Revenue], SUM(mart_top_products[purchase_events]))
+		formatString: \$#,0
+		lineageTag: 789252e3-780a-4b6c-998b-7499499b7b2e
+
+	column week_start
+		dataType: dateTime
+		formatString: dd mmm yyyy
+		lineageTag: e497a230-1672-4352-b97f-2c122a00b18d
+		summarizeBy: none
+		sourceColumn: week_start
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 266affd8-1a3c-4837-9ccc-f0d9e2387db3
+		summarizeBy: none
+		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column purchase_events
+		dataType: int64
+		formatString: 0
+		lineageTag: 07b840b7-4157-46e5-b900-b489d97f318a
+		summarizeBy: sum
+		sourceColumn: purchase_events
+
+		annotation SummarizationSetBy = Automatic
+
+	column orders
+		dataType: int64
+		formatString: 0
+		lineageTag: fb34a516-373a-44ca-8a2a-59f686fc4649
+		summarizeBy: sum
+		sourceColumn: orders
+
+		annotation SummarizationSetBy = Automatic
+
+	column buyers
+		dataType: int64
+		formatString: 0
+		lineageTag: 8e641a1e-5310-4cfc-8c53-2ec13712ebc1
+		summarizeBy: sum
+		sourceColumn: buyers
+
+		annotation SummarizationSetBy = Automatic
+
+	column revenue
+		dataType: double
+		lineageTag: 3fde3fc7-e2d5-48da-aec0-289ff8a235aa
+		summarizeBy: sum
+		sourceColumn: revenue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition mart_top_products = m
+		mode: import
+		source =
+				let
+				  Source = DatabricksMultiCloud.Catalogs("dbc-0f42ee9a-bdee.cloud.databricks.com", "/sql/1.0/warehouses/292b3395dca4d5ea", [Catalog = null, Database = null, QueryTags = null, EnableAutomaticProxyDiscovery = "enabled", Implementation = "2.0", Protocol = null]),
+				  #"Navigation 1" = Source{[Name = "ecommerce", Kind = "Database"]}[Data],
+				  #"Navigation 2" = #"Navigation 1"{[Name = "gold", Kind = "Schema"]}[Data],
+				  #"Navigation 3" = #"Navigation 2"{[Name = "mart_top_products", Kind = "Table"]}[Data]
+				in
+				  #"Navigation 3"
+
+	annotation PBI_ResultType = Table
+

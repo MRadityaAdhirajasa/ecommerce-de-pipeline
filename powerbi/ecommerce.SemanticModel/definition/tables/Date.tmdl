@@ -1,0 +1,19 @@
+table Date
+	lineageTag: e4a11bab-3de7-4b05-90b3-7fcbe4d2d14b
+	dataCategory: Time
+
+	column Date
+		dataType: dateTime
+		isKey
+		formatString: dd mmm yyyy
+		lineageTag: ce0065cd-49ad-4376-9548-ea6554325fb9
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition Date = calculated
+		mode: import
+		source = CALENDAR(MIN(fct_daily_sales[event_date]), MAX(fct_daily_sales[event_date]))
+

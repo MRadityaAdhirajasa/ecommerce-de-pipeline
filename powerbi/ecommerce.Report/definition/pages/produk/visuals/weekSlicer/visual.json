@@ -1,0 +1,55 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "weekSlicer",
+  "position": {
+    "x": 1440,
+    "y": 16,
+    "z": 2000,
+    "height": 96,
+    "width": 448,
+    "tabOrder": 2000
+  },
+  "visual": {
+    "visualType": "slicer",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "mart_top_products"
+                    }
+                  },
+                  "Property": "week_start"
+                }
+              },
+              "queryRef": "mart_top_products.week_start",
+              "nativeQueryRef": "week_start",
+              "active": true,
+              "displayName": "Minggu mulai"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "data": [
+        {
+          "properties": {
+            "mode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Dropdown'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

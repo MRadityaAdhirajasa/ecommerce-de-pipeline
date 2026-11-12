@@ -1,0 +1,118 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "eventsByHour",
+  "position": {
+    "x": 32,
+    "y": 512,
+    "z": 3000,
+    "height": 536,
+    "width": 916,
+    "tabOrder": 3000
+  },
+  "visual": {
+    "visualType": "clusteredColumnChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_hourly_activity"
+                    }
+                  },
+                  "Property": "event_hour"
+                }
+              },
+              "queryRef": "fct_hourly_activity.event_hour",
+              "nativeQueryRef": "event_hour",
+              "active": true,
+              "displayName": "Jam (UTC)"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_hourly_activity"
+                    }
+                  },
+                  "Property": "Avg Events per Day"
+                }
+              },
+              "queryRef": "fct_hourly_activity.Avg Events per Day",
+              "nativeQueryRef": "Avg Events per Day",
+              "displayName": "Rata-rata event"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "fct_hourly_activity"
+                  }
+                },
+                "Property": "event_hour"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Rata-rata Event per Jam'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Kapan pengunjung paling aktif menjelajah?'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "dataQuality",
+  "position": {
+    "x": 1276,
+    "y": 916,
+    "z": 8000,
+    "height": 132,
+    "width": 612,
+    "tabOrder": 8000
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_daily_funnel"
+                    }
+                  },
+                  "Property": "Purchase Without Cart"
+                }
+              },
+              "queryRef": "fct_daily_funnel.Purchase Without Cart",
+              "nativeQueryRef": "Purchase Without Cart",
+              "displayName": "Catatan data: sesi beli tanpa event cart"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -1,0 +1,16 @@
+relationship AutoDetected_8a4e3a62-3f6f-45cf-ac79-e42f906344a7
+	fromColumn: mart_top_products.product_id
+	toColumn: dim_products.product_id
+
+relationship 3c5d59c5-b6a6-4294-8f0e-0e4e33c8216a
+	fromColumn: fct_daily_sales.event_date
+	toColumn: Date.Date
+
+relationship 0bc35b19-07d4-432a-97f6-0e909d2d88b2
+	fromColumn: fct_daily_funnel.event_date
+	toColumn: Date.Date
+
+relationship cd989a74-9dd4-496c-a124-01504c685a10
+	fromColumn: fct_hourly_activity.event_date
+	toColumn: Date.Date
+
