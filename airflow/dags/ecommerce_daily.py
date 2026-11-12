@@ -138,7 +138,7 @@ def log_run_summary(run_date: str) -> dict:
     dag_id="ecommerce_daily",
     description="Batch harian e-commerce: landing -> bronze -> silver -> gold",
     start_date=pendulum.datetime(2019, 10, 1, tz="UTC"),
-    end_date=pendulum.datetime(2019, 10, 7, tz="UTC"),
+    end_date=pendulum.datetime(2019, 10, 11, tz="UTC"),
     schedule="@daily",
     catchup=True,
     # Free Edition cuma punya satu SQL warehouse kecil. Lebih dari satu run
